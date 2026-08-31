@@ -1,38 +1,31 @@
-/*
- * This class is used for the SongList class.
- * No changes should be made to this file.
+/** PROVIDED - do not change
+ * One song on the music site: a unique title and how many times it has been
+ * downloaded. A new SongInfo starts with 1 download.
  */
 public class SongInfo {
     private String title;
     private int numOfDl;
-    
-    /* Constructor
-     * Creates a new instance with the given unique title and sets 
-     * the number of times downloaded to 1.
-     * @param title the unique title of the downloaded song
+
+    /** Creates a new SongInfo with the given unique title and a download
+     *  count of 1.
+     *  @param title the unique title of the downloaded song
      */
     public SongInfo(String title) {
         this.title = title;
         numOfDl = 1;
     }
 
-    /* Accessor
-     * @return the title
-     */
+    /** @return the title */
     public String getTitle() {
         return title;
     }
 
-    /* Accessor
-     * @return number of times downloaded
-     */
+    /** @return number of times downloaded */
     public int getNumOfDownloads() {
         return numOfDl;
     }
 
-    /* Mutator
-     * Increment the number of times downloaded by 1
-     */
+    /** Adds 1 to the number of times downloaded. */
     public void incrementTimesDownloaded() {
         numOfDl++;
     }

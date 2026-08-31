@@ -1,0 +1,76 @@
+name: Autograding Tests
+'on':
+  - push
+  - workflow_dispatch
+  - repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Integrity check - tests, pom.xml and grading.json must be unchanged
+        run: |
+          EXPECTED="85a9b3f3b97fbb04f3da04f5828624e71d0591329abcfd95e9a6b540830f6d1e"
+          ACTUAL=$( (for f in $(find src/test/java -type f -name '*.java' | LC_ALL=C sort) pom.xml grading.json; do sed 's/\r$//' "$f"; done) | sha256sum | cut -d' ' -f1)
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "::error::The test files, pom.xml, or grading.json in this repository differ from the assignment template. Grading has been stopped. Restore the original files (git checkout origin/main -- src/test pom.xml grading.json) and push again."
+            exit 1
+          fi
+          echo "Integrity check passed."
+      - name: "SongList.getSongInfo (20)"
+        id: getsonginfo
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: "SongList.getSongInfo"
+          setup-command: ''
+          command: mvn -B -q test -Dtest=GetSongInfoTest -Dsurefire.failIfNoSpecifiedTests=false
+          timeout: 5
+          max-score: 20
+      - name: "SongList.updateDownloads (30)"
+        id: updatedownloads
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: "SongList.updateDownloads"
+          setup-command: ''
+          command: mvn -B -q test -Dtest=UpdateDownloadsTest -Dsurefire.failIfNoSpecifiedTests=false
+          timeout: 5
+          max-score: 30
+      - name: "ReviewCollection.addReview (20)"
+        id: addreview
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: "ReviewCollection.addReview"
+          setup-command: ''
+          command: mvn -B -q test -Dtest=AddReviewTest -Dsurefire.failIfNoSpecifiedTests=false
+          timeout: 5
+          max-score: 20
+      - name: "ReviewCollection.getNumGoodReviews (30)"
+        id: getnumgoodreviews
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: "ReviewCollection.getNumGoodReviews"
+          setup-command: ''
+          command: mvn -B -q test -Dtest=GetNumGoodReviewsTest -Dsurefire.failIfNoSpecifiedTests=false
+          timeout: 5
+          max-score: 30
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          GETSONGINFO_RESULTS: "${{ steps.getsonginfo.outputs.result }}"
+          UPDATEDOWNLOADS_RESULTS: "${{ steps.updatedownloads.outputs.result }}"
+          ADDREVIEW_RESULTS: "${{ steps.addreview.outputs.result }}"
+          GETNUMGOODREVIEWS_RESULTS: "${{ steps.getnumgoodreviews.outputs.result }}"
+        with:
+          runners: getsonginfo,updatedownloads,addreview,getnumgoodreviews

@@ -2,10 +2,13 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class GetSongInfoTest {
-    public ArrayList<SongInfo> createSongList(int version) {
+
+    /** version 1: Gila Monster(1), Breezeblocks(1), Walcott(3), Vampire(2)
+     *  version 2: Breezeblocks(1), Vampire(2), Pocket Crocodile(1)
+     *  version 3: Gila Monster(1), Walcott(3), Iamayam(2)               */
+    private ArrayList<SongInfo> createSongList(int version) {
         SongInfo song1 = new SongInfo("Gila Monster");
         SongInfo song2 = new SongInfo("Breezeblocks");
         SongInfo song3 = new SongInfo("Walcott");
@@ -16,71 +19,110 @@ public class GetSongInfoTest {
         SongInfo song5 = new SongInfo("Iamayam");
         song5.incrementTimesDownloaded();
         SongInfo song6 = new SongInfo("Pocket Crocodile");
-        if (version == 1)
-            return new ArrayList<>(Arrays.asList(song1, song2, song3, song4));
-        else if (version == 2)
-            return new ArrayList<>(Arrays.asList(song2, song4, song6));
-        else
-            return new ArrayList<>(Arrays.asList(song1, song3, song5));
+
+        ArrayList<SongInfo> list = new ArrayList<SongInfo>();
+        if (version == 1) {
+            list.add(song1);
+            list.add(song2);
+            list.add(song3);
+            list.add(song4);
+        } else if (version == 2) {
+            list.add(song2);
+            list.add(song4);
+            list.add(song6);
+        } else {
+            list.add(song1);
+            list.add(song3);
+            list.add(song5);
+        }
+        return list;
     }
 
-    @DisplayName("getSongInfo Test 1")
+    @DisplayName("getSongInfo(\"Gila Monster\"): first song in the list -> that SongInfo, 1 download")
     @Test
     void getSongInfo_Test01() {
         SongList sl = new SongList(createSongList(1));
         SongInfo song = sl.getSongInfo("Gila Monster");
-        String result = song.getTitle() + song.getNumOfDownloads();
-        String expected = "Gila Monster1";
-        assertEquals(expected, result);        
+        assertNotNull(song, "Gila Monster is in the list - should not return null");
+        assertEquals("Gila Monster", song.getTitle(), "wrong song returned");
+        assertEquals(1, song.getNumOfDownloads(), "Gila Monster has 1 download");
     }
 
-    @DisplayName("getSongInfo Test 2")
+    @DisplayName("getSongInfo(\"Vampire\"): middle of the list -> that SongInfo, 2 downloads")
     @Test
     void getSongInfo_Test02() {
         SongList sl = new SongList(createSongList(2));
         SongInfo song = sl.getSongInfo("Vampire");
-        String result = song.getTitle() + song.getNumOfDownloads();
-        String expected = "Vampire2";
-        assertEquals(expected, result);        
+        assertNotNull(song, "Vampire is in the list");
+        assertEquals("Vampire", song.getTitle(), "wrong song returned");
+        assertEquals(2, song.getNumOfDownloads(), "Vampire has 2 downloads");
     }
 
-    @DisplayName("getSongInfo Test 3")
+    @DisplayName("getSongInfo(\"Iamayam\") on a list that does not contain it -> null")
     @Test
     void getSongInfo_Test03() {
         SongList sl = new SongList(createSongList(1));
-        SongInfo song = sl.getSongInfo("Iamayam");
-        // String result = song.getTitle() + song.getNumOfDownloads();
-        // String expected = "Vampire1";
-        assertEquals(null, song);       
+        assertNull(sl.getSongInfo("Iamayam"), "title not in the list -> return null, not some other song");
     }
 
-    @DisplayName("getSongInfo Test 4")
+    @DisplayName("getSongInfo(\"Iamayam\"): last song in the list -> that SongInfo, 2 downloads")
     @Test
     void getSongInfo_Test04() {
         SongList sl = new SongList(createSongList(3));
         SongInfo song = sl.getSongInfo("Iamayam");
-        String result = song.getTitle() + song.getNumOfDownloads();
-        String expected = "Iamayam2";
-        assertEquals(expected, result);
+        assertNotNull(song, "Iamayam is the last song - make sure the loop reaches the end");
+        assertEquals("Iamayam", song.getTitle(), "wrong song returned");
+        assertEquals(2, song.getNumOfDownloads(), "Iamayam has 2 downloads");
     }
 
-    @DisplayName("getSongInfo Test 5")
+    @DisplayName("getSongInfo(\"Breezeblocks\") -> that SongInfo, 1 download")
     @Test
     void getSongInfo_Test05() {
         SongList sl = new SongList(createSongList(2));
         SongInfo song = sl.getSongInfo("Breezeblocks");
-        String result = song.getTitle() + song.getNumOfDownloads();
-        String expected = "Breezeblocks1";
-        assertEquals(expected, result);        
+        assertNotNull(song, "Breezeblocks is in the list");
+        assertEquals("Breezeblocks", song.getTitle(), "wrong song returned");
+        assertEquals(1, song.getNumOfDownloads(), "Breezeblocks has 1 download");
     }
 
-    @DisplayName("getSongInfo Test 6")
+    @DisplayName("getSongInfo(\"Pocket Crocodile\") on a list without it -> null")
     @Test
     void getSongInfo_Test06() {
         SongList sl = new SongList(createSongList(3));
-        SongInfo song = sl.getSongInfo("Pocket Crocodile");
-        // String result = song.getTitle() + song.getNumOfDownloads();
-        // String expected = "Vampire1";
-        assertEquals(null, song);        
+        assertNull(sl.getSongInfo("Pocket Crocodile"), "title not in the list -> null");
+    }
+
+    @DisplayName("getSongInfo returns the SAME object that is in the list, not a copy")
+    @Test
+    void getSongInfo_Test07() {
+        ArrayList<SongInfo> list = createSongList(1);
+        SongList sl = new SongList(list);
+        assertSame(list.get(2), sl.getSongInfo("Walcott"), "return the reference stored in downloadList");
+    }
+
+    @DisplayName("getSongInfo does not change the list (size and order intact)")
+    @Test
+    void getSongInfo_Test08() {
+        SongList sl = new SongList(createSongList(1));
+        sl.getSongInfo("Walcott");
+        sl.getSongInfo("Nothing Here");
+        ArrayList<SongInfo> list = sl.getDownloadList();
+        assertEquals(4, list.size(), "the list should still have 4 songs");
+        assertEquals("Gila Monster", list.get(0).getTitle(), "index 0 unchanged");
+        assertEquals("Vampire", list.get(3).getTitle(), "index 3 unchanged");
+    }
+
+    @DisplayName("getSongInfo on an empty list -> null")
+    @Test
+    void getSongInfo_Test09() {
+        SongList sl = new SongList();
+        assertNull(sl.getSongInfo("Anything"), "empty list -> null");
+    }
+
+    @DisplayName("getSongInfo is case-sensitive: \"walcott\" does not match \"Walcott\" -> null")
+    @Test
+    void getSongInfo_Test10() {
+        SongList sl = new SongList(createSongList(1));
+        assertNull(sl.getSongInfo("walcott"), "titles must match exactly");
     }
 }

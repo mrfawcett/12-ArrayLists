@@ -4,43 +4,42 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.csa.demos</groupId>
-    <artifactId>straight-m-testing</artifactId>
-    <version>0.0.0</version>
+    <groupId>com.fairmont.apcsa</groupId>
+    <artifactId>arraylists</artifactId>
+    <version>2026.1</version>
+
+    <properties>
+        <!-- Students run JDK 26; we compile to Java 21 bytecode so the
+             autograder (Temurin 21) and every student machine agree. -->
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.6.2</version>
+            <version>5.11.4</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
+                <version>3.13.0</version>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M3</version>
+                <version>3.5.2</version>
+                <configuration>
+                    <!-- keep grader output readable -->
+                    <trimStackTrace>true</trimStackTrace>
+                </configuration>
             </plugin>
-
         </plugins>
-
     </build>
-
-
 </project>

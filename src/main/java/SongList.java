@@ -1,112 +1,108 @@
 import java.util.ArrayList;
 
-/* INSTRUCTIONS
- * A music website keeps track of downloaded music. For each download, the site 
- * uses a SongInfo object to store a song's title and the number of times it has 
- * been downloaded.
- * You will have to implement two methods for the SongList class: getSongInfo
- * and updateDownloads.
- * The getSongInfo method returns a reference to a SongInfo object if an object 
- * with a title that matches the parameter title exists in the downloadList. If 
- * no song in download has a title that matches the parameter title, the method 
- * returns null.
+/** READ FIRST
+ * A music website keeps track of downloaded music. For each song the site
+ * stores a SongInfo object (provided) holding the song's title and the number
+ * of times it has been downloaded. SongList keeps those objects in an
+ * ArrayList<SongInfo> named downloadList. Titles are unique: no two SongInfo
+ * objects in downloadList have the same title.
  *
- * EXAMPLE CODE:
- * The variable mySongs is an instance of SongList and the table below represents 
- * the contents of downloadList.
+ * You implement two methods: getSongInfo and updateDownloads.
+ *
+ * Adapted from the 2013 AP Computer Science A free-response question
+ * "MusicDownloads" (Question 1).
+ *
+ * ---- getSongInfo ----
+ * Returns a reference to the SongInfo object whose title equals the parameter,
+ * or null if no song in downloadList has that title. downloadList is not
+ * changed.
+ *
+ * The variable mySongs is a SongList whose downloadList holds:
  * Index:           0               1               2
  * SongInfo:    "Little Man"    "Yam Yam"     "Tree Hugger"
  *                  5               2               4
- * 
- * The call mySongs.getSongInfo("Yam Yam") returns a reference to the object in 
- * position 2 of the list.
- * The call mySongs.getSongInfo("Vampire") returns null because there are no 
- * SongInfo objects with that title in the list.
- * 
- * The method updateDownloads takes a list of song titles as a parameter. For 
- * each title in the list, the method updates downloadList,either by incrementing 
- * the download count if a SongInfo object with the same title exists, or by 
- * adding a new SongInfo object with that title and a download count of 1 to 
- * the end of the list. When a new SongInfo object is added to the end of the 
- * list, the order of the already existing entries in downloadList remains 
- * unchanged.
- * 
- * EXAMPLE CODE:
- * The variable mySongs is an instance of SongList and the table below represents 
- * the contents of downloadList.
- * Index:           0               1               2
- * SongInfo:    "Little Man"    "Yam Yam"      "Tree Hugger"
- *                  5               2               4
- * 
- * The variable songTitles has been created with the following entries:
- * {"Hey Jude", "Daria", "Yam Yam", "Russian", "Tree Hugger", "Hey Jude"}
- * 
- * The call mySongs.updateDownloads(songTitles) will have the following result:
+ *
+ * mySongs.getSongInfo("Yam Yam") returns a reference to the object at
+ *     index 1 (the second object in the list).
+ * mySongs.getSongInfo("Vampire") returns null because no SongInfo in the
+ *     list has that title.
+ *
+ * ---- updateDownloads ----
+ * Takes an ArrayList<String> of song titles. For EACH title in that list, in
+ * order: if a SongInfo with that title already exists in downloadList, its
+ * download count goes up by 1; otherwise a new SongInfo with that title (and
+ * therefore a download count of 1) is added to the END of downloadList. The
+ * existing entries never move.
+ *
+ * Start with the same mySongs as above and
+ *   songTitles = {"Hey Jude", "Daria", "Yam Yam", "Russian", "Tree Hugger", "Hey Jude"}
+ *
+ * After mySongs.updateDownloads(songTitles), downloadList holds:
  *     0               1               2               3              4               5
  * "Little Man"    "Yam Yam"     "Tree Hugger"     "Hey Jude"      "Daria"        "Russian"
  *     5               3               5               2              1               1
- * 
- * When writing your solution you must use the getSongInfo method.
+ *
+ * "Hey Jude" appeared twice: the first time it was added with count 1, the
+ * second time that same object was incremented to 2.
+ *
+ * You MUST call getSongInfo from updateDownloads - do not rewrite the search.
  */
-
 public class SongList {
     private ArrayList<SongInfo> downloadList;
 
+    /** PROVIDED - do not change */
     public SongList() {
         downloadList = new ArrayList<SongInfo>();
     }
 
-    /* Constructor
-     * This constructor is used for testing purposes.
-     * Do not change anything.
+    /** PROVIDED - do not change
+     * Used by the tests to start from a prepared list.
      */
     public SongList(ArrayList<SongInfo> newList) {
         downloadList = newList;
     }
 
-    /* Accessor
-     * This accessor is used for testing purposes.
-     * Do not change anything.
+    /** PROVIDED - do not change
+     * Used by the tests to inspect the list.
      */
     public ArrayList<SongInfo> getDownloadList() {
         return downloadList;
     }
 
-    /* COMPLETE THIS METHOD
-     * Returns a reference to the SongInfo object with the requested title if 
-     * it exists.
-     * @param title the requested title
-     * @return a reference to the SongInfo object with the title that matches 
-     *          the parameter title if it exists in the list; null otherwise.
-     * Postcondition:
-     * - No changes were made to downloadList
+    /** COMPLETE THIS METHOD
+     * Precondition: no two songs in downloadList have the same title.
+     * Returns a reference to the SongInfo in downloadList whose title equals
+     * title, or null if there is none. Postcondition: downloadList unchanged.
+     * Example: with the list above, getSongInfo("Yam Yam") returns the object
+     *          at index 1; getSongInfo("Vampire") returns null.
+     * Hint: for-each over downloadList, compare titles with .equals, return
+     *       the match as soon as you find it; return null AFTER the loop.
      */
-    public SongInfo getSongInfo(String Title) {
+    public SongInfo getSongInfo(String title) {
         // Insert your code below
 
-        
         return null;
     }
 
-    /* COMPLETE THIS METHOD
-     * Updates downloadList with information from titles.
-     * @param titles a list of song titles
+    /** COMPLETE THIS METHOD
+     * Updates downloadList using every title in titles, in order.
      * Postconditions:
      * - there are no duplicate titles in downloadList
      * - no entries were removed from downloadList
-     * - all songs in titles are represented in downloadList
-     * - for each exisating entry in downloadList, the download count is 
-     *   increased by the number of times its title appeared in titles
-     * - the order of the existing entries in downloadList is not changed
-     * - the first time an object with a title from titles is added to 
-     *   downloadList, it is added to the end of the list
-     * - new entries in downloadList appear in the same order
-     * - for each new entry in downloadList, the download count is equal to 
-     *   the number of times its title appeared in titles.
+     * - every title in titles is represented in downloadList
+     * - each existing entry's count grew by the number of times its title
+     *   appeared in titles
+     * - the order of the existing entries is unchanged
+     * - a title that was not already present is added to the END of the list
+     *   the first time it is seen; later repeats increment that new entry
+     * - new entries appear in the order they were first seen
+     * Example: see the table in the READ FIRST comment.
+     * Hint: for each title, call getSongInfo(title). If it returns null,
+     *       downloadList.add(new SongInfo(title)); otherwise call
+     *       incrementTimesDownloaded() on what it returned.
      */
     public void updateDownloads(ArrayList<String> titles) {
         // Insert your code below
-        
 
     }
 }

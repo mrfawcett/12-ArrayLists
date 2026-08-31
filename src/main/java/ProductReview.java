@@ -1,29 +1,22 @@
-/*
- * This class is used for ReviewCollection.
- * No changes should be made to this file.
+/** PROVIDED - do not change
+ * One review of one product: the product's name and the text of the review.
  */
 public class ProductReview {
     private String name;
     private String review;
 
-    /* Constructor
-     * Constructs a ProductReview object and initializes the instance variables
-     */
+    /** Constructs a ProductReview and initializes both instance variables. */
     public ProductReview(String pName, String pReview) {
         name = pName;
         review = pReview;
     }
 
-    /* Accessor
-     * @return the name of the product
-     */
+    /** @return the name of the product */
     public String getName() {
         return name;
     }
 
-    /* Accessor
-     * @return the review of the product
-     */
+    /** @return the text of the review */
     public String getReview() {
         return review;
     }

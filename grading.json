@@ -1,0 +1,6 @@
+[
+ {"test": "GetSongInfoTest",       "name": "SongList.getSongInfo",                  "points": 20},
+ {"test": "UpdateDownloadsTest",   "name": "SongList.updateDownloads",              "points": 30},
+ {"test": "AddReviewTest",         "name": "ReviewCollection.addReview",            "points": 20},
+ {"test": "GetNumGoodReviewsTest", "name": "ReviewCollection.getNumGoodReviews",    "points": 30}
+]
