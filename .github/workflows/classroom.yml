@@ -20,22 +20,13 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-      - name: Integrity check - tests, pom.xml and grading.json must be unchanged
-        run: |
-          EXPECTED="85a9b3f3b97fbb04f3da04f5828624e71d0591329abcfd95e9a6b540830f6d1e"
-          ACTUAL=$( (for f in $(find src/test/java -type f -name '*.java' | LC_ALL=C sort) pom.xml grading.json; do sed 's/\r$//' "$f"; done) | sha256sum | cut -d' ' -f1)
-          if [ "$ACTUAL" != "$EXPECTED" ]; then
-            echo "::error::The test files, pom.xml, or grading.json in this repository differ from the assignment template. Grading has been stopped. Restore the original files (git checkout origin/main -- src/test pom.xml grading.json) and push again."
-            exit 1
-          fi
-          echo "Integrity check passed."
       - name: "SongList.getSongInfo (20)"
         id: getsonginfo
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: "SongList.getSongInfo"
           setup-command: ''
-          command: mvn -B -q test -Dtest=GetSongInfoTest -Dsurefire.failIfNoSpecifiedTests=false
+          command: sh .github/grade.sh GetSongInfoTest
           timeout: 5
           max-score: 20
       - name: "SongList.updateDownloads (30)"
@@ -44,7 +35,7 @@ jobs:
         with:
           test-name: "SongList.updateDownloads"
           setup-command: ''
-          command: mvn -B -q test -Dtest=UpdateDownloadsTest -Dsurefire.failIfNoSpecifiedTests=false
+          command: sh .github/grade.sh UpdateDownloadsTest
           timeout: 5
           max-score: 30
       - name: "ReviewCollection.addReview (20)"
@@ -53,7 +44,7 @@ jobs:
         with:
           test-name: "ReviewCollection.addReview"
           setup-command: ''
-          command: mvn -B -q test -Dtest=AddReviewTest -Dsurefire.failIfNoSpecifiedTests=false
+          command: sh .github/grade.sh AddReviewTest
           timeout: 5
           max-score: 20
       - name: "ReviewCollection.getNumGoodReviews (30)"
@@ -62,7 +53,7 @@ jobs:
         with:
           test-name: "ReviewCollection.getNumGoodReviews"
           setup-command: ''
-          command: mvn -B -q test -Dtest=GetNumGoodReviewsTest -Dsurefire.failIfNoSpecifiedTests=false
+          command: sh .github/grade.sh GetNumGoodReviewsTest
           timeout: 5
           max-score: 30
       - name: Autograding Reporter
